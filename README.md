@@ -1,6 +1,6 @@
 # TeamCity Chutzpah Meta-Runner
-TeamCity meta-runner for Chutzpah Console. Does not require Chutzpah to be pre-installed on agents as it will automatically download the latest 
-Chutzpah Console NuGet.
+TeamCity meta-runner for the Chutzpah Console JavaScript test runner. Does not require Chutzpah to be pre-installed on agents as the runner can automatically download the latest
+Chutzpah Console NuGet package.
 
 ## How to use
 
@@ -17,17 +17,15 @@ and should match the -path parameter for the chutzpah console exe.
 
 ![Setup Report Tab](https://joncubed.github.io/teamcity-chutzpah-meta-runner/assests/teamcity-build-step.png)
 
-### Setup Code Coverage
-If you want to display the code coverage results as another tab on the build results page, you will need to add a new report tab to either the 
-project's configuration or in Root project if you want it available for all projects.
-
-![Setup Report Tab](https://joncubed.github.io/teamcity-chutzpah-meta-runner/assests/teamcity-report-tab.png)
+### Set Up Code Coverage
+If you want to display the code coverage results as another tab on the build results page and the summary on the overview page, you will need to add an artifact.
 
 For each project that is doing code coverage you will also need to add the generated code coverage file as a build artifact.
 ![Setup Report Tab](https://joncubed.github.io/teamcity-chutzpah-meta-runner/assests/teamcity-build-artifacts.png)
 
 ## How to build the plugin
 
+This requires PowerShell 5.0
 Run build-plugin.ps1 from root folder and the plugin will be created in _**./.artifacts**_ as ChutzpahConsole-plugin.zip 
 ````PowerShell
 PS c:\source\teamcity-chutzpah-meta-runner>.\build-plugin.ps1
