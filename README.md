@@ -18,9 +18,11 @@ and should match the -path parameter for the chutzpah console exe.
 ![Setup Report Tab](https://joncubed.github.io/teamcity-chutzpah-meta-runner/assests/teamcity-build-step.png)
 
 ### Set Up Code Coverage
-If you want to display the code coverage results as another tab on the build results page and the summary on the overview page, you will need to add an artifact.
+If you select 'Enable code coverage' then coverage will be calculated and automatically added (as line coverage) to the Run overview tab.
 
-For each project that is doing code coverage you will also need to add the generated code coverage file as a build artifact.
+If you want to have the coverage results as another tab on the build results page, you will need to add an artifact.
+
+For each project that is doing code coverage add the following line to the artifacts tab: '_ChutzpahCoverage=>coverage.zip'
 ![Setup Report Tab](https://joncubed.github.io/teamcity-chutzpah-meta-runner/assests/teamcity-build-artifacts.png)
 
 ## How to build the plugin
