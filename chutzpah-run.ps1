@@ -82,5 +82,8 @@ if ($coverage) {
 
 # Ensure that the build step counts as failed if that was requested
 if ($failOnError -and $ChutzpahReturnCode -ne 0) {
-    throw "The test run failed in some way. Refer to the log for details."
+    # Although throwing an exception within a direct PowerShell step results in the step failing
+    # it does not work in a PowerShell-based teamCity plugin. So instead report the error and exit explicitly
+    Write-Error "The test run failed in some way. Refer to the log for details." -ErrorAction Continue
+    exit -1
 }
