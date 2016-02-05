@@ -3,11 +3,11 @@
   <description>Run Chutzpah Console</description>
   <settings>
     <parameters>
-      <param name="useExistingPackage" value="" spec="checkbox description='Use the existing Chutzpah NuGet package downloaded in an earlier step (e.g. by version)' label='Use the existing Chutzpah NuGet package' display='normal' checkedValue='-useExistingPackage' uncheckedValue=''" />
+      <param name="useExistingPackage" value="" spec="checkbox description='Use the existing Chutzpah NuGet package downloaded in an earlier step (e.g. by version)' label='Use the existing Chutzpah NuGet package' display='normal' checkedValue='-useExistingPackage' uncheckedValue='-useExistingPackage:$false'" />
       <param name="path.chutzpahUnitTest" value="" spec="text description='Semicolon-separated paths to folders or files to run' validationMode='not_empty' label='Test folders' display='normal'" />
-      <param name="codeCoverage" value="" spec="checkbox description='Enable to produce code coverage report' label='Enable code coverage' display='normal' checkedValue='-coverage' uncheckedValue=''" />
-      <param name="failOnError" value="" spec="checkbox description='Return a non-zero exit code if any script errors or timeouts occurs' label='Fail on error' display='normal' checkedValue='-failOnError' uncheckedValue=''" />
-      <param name="debug" value="" spec="checkbox description='Print debugging information and tracing to console' label='Enable debug mode' display='normal' checkedValue='-debug' uncheckedValue=''" />
+      <param name="codeCoverage" value="" spec="checkbox description='Enable to produce code coverage report' label='Enable code coverage' display='normal' checkedValue='-coverage' uncheckedValue='-coverage:$false'" />
+      <param name="failOnError" value="" spec="checkbox description='Return a non-zero exit code if any script errors or timeouts occurs' label='Fail on error' display='normal' checkedValue='-failOnError' uncheckedValue='-failOnError:$false'" />
+      <param name="debug" value="" spec="checkbox description='Print debugging information and tracing to console' label='Enable debug mode' display='normal' checkedValue='-debug' uncheckedValue='-debug:$false'" />
     </parameters>
     <build-runners>
       <runner name="Chutzpah Runner" type="jetbrains_powershell">
