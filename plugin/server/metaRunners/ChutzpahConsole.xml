@@ -3,18 +3,21 @@
   <description>Run Chutzpah Console</description>
   <settings>
     <parameters>
-      <param name="useExistingPackage" value="" spec="checkbox description='Use the existing Chutzpah NuGet package downloaded in an earlier step (e.g. by version)' label='Use the existing Chutzpah NuGet package' display='normal' checkedValue='-useExistingPackage' uncheckedValue='-useExistingPackage:$false'" />
+      <!--NB it would appear that using blank values for the uncheckedValue or leaving them undefined does not work, so invent dummy negative switches-->
+      <param name="useExistingPackage" value="-downloadPackage" spec="checkbox description='Use the existing Chutzpah NuGet package downloaded in an earlier step (e.g. by version)' label='Use the existing Chutzpah NuGet package' display='normal' checkedValue='-useExistingPackage' uncheckedValue='-downloadPackage'"></param>
       <param name="path.chutzpahUnitTest" value="" spec="text description='Semicolon-separated paths to folders or files to run' validationMode='not_empty' label='Test folders' display='normal'" />
-      <param name="codeCoverage" value="" spec="checkbox description='Enable to produce code coverage report' label='Enable code coverage' display='normal' checkedValue='-coverage' uncheckedValue='-coverage:$false'" />
-      <param name="failOnError" value="" spec="checkbox description='Return a non-zero exit code if any script errors or timeouts occurs' label='Fail on error' display='normal' checkedValue='-failOnError' uncheckedValue='-failOnError:$false'" />
-      <param name="debug" value="" spec="checkbox description='Print debugging information and tracing to console' label='Enable debug mode' display='normal' checkedValue='-debug' uncheckedValue='-debug:$false'" />
+      <param name="codeCoverage" value="-nocoverage" spec="checkbox description='Enable to produce code coverage report' label='Enable code coverage' display='normal' checkedValue='-coverage' uncheckedValue='-nocoverage'" />
+      <param name="failOnError" value="-continueOnError" spec="checkbox description='Return a non-zero exit code if any script errors or timeouts occurs' label='Fail on error' display='normal' checkedValue='-failOnError' uncheckedValue='-continueOnError'" />
+      <param name="debug" value="-nodebug" spec="checkbox description='Print debugging information and tracing to console' label='Enable debug mode' display='normal' checkedValue='-debug' uncheckedValue='-nodebug'" />
     </parameters>
     <build-runners>
       <runner name="Chutzpah Runner" type="jetbrains_powershell">
         <parameters>
           <param name="jetbrains_powershell_bitness" value="x86" />
           <param name="jetbrains_powershell_execution" value="PS1" />
-          <param name="jetbrains_powershell_scriptArguments" value="%useExistingPackage% -nugetexe %teamcity.tool.NuGet.CommandLine.DEFAULT.nupkg%\tools\nuget.exe -path %path.chutzpahUnitTest% -teamcity %codeCoverage% %failOnError% %debug%" />
+          <param name="jetbrains_powershell_scriptArguments" value="%useExistingPackage% -nugetexe %teamcity.tool.NuGet.CommandLine.DEFAULT.nupkg%\tools\nuget.exe -path '%path.chutzpahUnitTest%' -teamcity %codeCoverage% %failOnError% %debug%">
+            <!--We need quotes around the path because of the semicolons-->
+          </param>
           <param name="jetbrains_powershell_script_file" value="%teamcity.agent.tools.dir%\ChutzpahConsole\tools\chutzpah-run.ps1" />
           <param name="jetbrains_powershell_script_mode" value="FILE" />
           <param name="teamcity.step.mode" value="default" />
