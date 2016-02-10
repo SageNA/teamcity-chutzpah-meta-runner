@@ -16,8 +16,12 @@ $params = @() # An array of parameters to pass to the console program
 # Sometimes the build runner works from the working directory and sometimes from its own location, so explicitly run
 # from the working directory.
 if ($workingDir -ne $null) {
-    Write-Output "Setting the working directory to $workingDir from $PWD"
-    cd $workingDir
+    if ($workingDir -ne $PWD) {
+        Write-Output "Setting the working directory to $workingDir from $PWD"
+        cd $workingDir
+    } else {
+        Write-Output "The working directory is $PWD"
+    }
 }
 
 if ($path) {
@@ -31,8 +35,18 @@ if ($path) {
     }
 
     # Now we can safely split at the semicolons
+    $pathsSpecified =  $false
     foreach ($pathLine in ($path -split ';')) {
-        $params += "/path `"$pathLine`""
+        if (Test-Path -Path $pathLine) {
+            $params += "/path `"$pathLine`""
+            $pathsSpecified = $true
+        } else {
+            Write-Output "Ignoring path $pathLine as it does not exist"
+        }
+    }
+    if (-not $pathsSpecified) {
+        throw New-Object System.ArgumentException(
+                'Aborting since none of the specified paths exist')
     }
 }
 
@@ -72,14 +86,20 @@ if ($useExistingPackage) {
     # There is a small risk that a versionless version may actually be newer than the last versioned one, or that they
     # may be fetched in a strange order; we accept that risk.
     Write-Output "Looking for package under $PWD"
-    $ChutzpahPackageFileInfo = (Get-ChildItem -Path packages | where {$_.Name -match '^Chutzpah((.[0-9]+)*)$'} |
-                                Select-Object -Last 1)
-    if ($ChutzpahPackageFileInfo -eq $null)
-    {
-        throw New-Object System.ArgumentException('useExistingPackage was specified but no Chutzpah package was found')
+    if (Test-Path packages -PathType Container) {
+        $ChutzpahPackageFileInfo = (Get-ChildItem -Path packages | where {$_.Name -match '^Chutzpah((.[0-9]+)*)$'} |
+                                    Select-Object -Last 1)
+        if ($ChutzpahPackageFileInfo -eq $null)
+        {
+            throw New-Object System.ArgumentException(
+                    'useExistingPackage was specified but no Chutzpah package was found')
+        }
+        $ChutzpahPackage = $ChutzpahPackageFileInfo.name
+        Write-Output "Using existing Chutzpah package $ChutzpahPackage"
+    } else {
+        throw New-Object System.ArgumentException(
+                'useExistingPackage was specified but no NuGet packages folder was found')
     }
-    $ChutzpahPackage = $ChutzpahPackageFileInfo.name
-    Write-Output "Using existing Chutzpah package $ChutzpahPackage"
 } else {
     # Get the latest Chutzpah
     . $nugetExe Install "Chutzpah" -OutputDirectory "packages" -ExcludeVersion
@@ -101,18 +121,22 @@ if ($coverage) {
     # coverage
     # A working method appears to be simply to take the last percentage and ratio from the coverage file; it is much
     # easier than trying to parse and navigate the html
-    $all = Get-Content $ChutzpahCoverageFilePath
-    $percentage = ($all | where {$_ -match '^[\s]*[0-9]+\.[0-9]+[\s]*%$'} | Select-Object -Last 1)
-    if ($percentage -ne $null) {
-        "##teamcity[buildStatisticValue key='CodeCoverageB' value='$($percentage.replace('%','').trim())']"
+    if (Test-Path $ChutzpahCoverageFilePath) {
+        $all = Get-Content $ChutzpahCoverageFilePath
+        $percentage = ($all | where {$_ -match '^[\s]*[0-9]+\.[0-9]+[\s]*%$'} | Select-Object -Last 1)
+        if ($percentage -ne $null) {
+            "##teamcity[buildStatisticValue key='CodeCoverageB' value='$($percentage.replace('%','').trim())']"
+        }
+        $ratio = ($all | where {$_ -match '^[\s]*[0-9]+[\s]*/[\s]*[0-9]+[\s]*$'} | select-object -last 1)
+        if ($ratio -ne $null) {
+            $ratioArray = $ratio.split('/')
+            "##teamcity[buildStatisticValue key='CodeCoverageAbsLCovered' value='$($ratioArray[0].trim())']"
+            "##teamcity[buildStatisticValue key='CodeCoverageAbsLTotal' value='$($ratioArray[1].trim())']"
+        }
+        Write-Output "Ensure that in the General Settings your Artifacts paths includes '$ChutzpahCoverageFolderName=>Coverage.zip' to have the coverage tab added automatically"
+    } else {
+        Write-Error "For some reason the coverage file was not generated." -ErrorAction Continue
     }
-    $ratio = ($all | where {$_ -match '^[\s]*[0-9]+[\s]*/[\s]*[0-9]+[\s]*$'} | select-object -last 1)
-    if ($ratio -ne $null) {
-        $ratioArray = $ratio.split('/')
-        "##teamcity[buildStatisticValue key='CodeCoverageAbsLCovered' value='$($ratioArray[0].trim())']"
-        "##teamcity[buildStatisticValue key='CodeCoverageAbsLTotal' value='$($ratioArray[1].trim())']"
-    }
-    Write-Output "Ensure that in the General Settings your Artifacts paths includes '$ChutzpahCoverageFolderName=>Coverage.zip' to have the coverage tab added automatically"
 }
 
 # Ensure that the build step counts as failed if that was requested
