@@ -1,4 +1,8 @@
 ﻿<#
+  Copyright (c) 2016 Sage Software, Inc. All rights reserved.
+  Based upon a concept authored by Jon Kuleff (https://github.com/JonCubed)
+
+  The core PowerShell code of a TeamCity runner that wraps the Chutzpah JavaScript test runner
  #>
 param (
     [string]$workingDir, # Optionally specify the working directory
