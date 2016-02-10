@@ -41,12 +41,12 @@ if ($path) {
             $params += "/path `"$pathLine`""
             $pathsSpecified = $true
         } else {
-            Write-Output "Ignoring path $pathLine as it does not exist"
+            Write-Output "Ignoring path `"$pathLine`" as it does not exist"
         }
     }
     if (-not $pathsSpecified) {
         throw New-Object System.ArgumentException(
-                'Aborting since none of the specified paths exist')
+                "Aborting since none of the specified paths ($path) exist")
     }
 }
 
@@ -135,7 +135,7 @@ if ($coverage) {
         }
         Write-Output "Ensure that in the General Settings your Artifacts paths includes '$ChutzpahCoverageFolderName=>Coverage.zip' to have the coverage tab added automatically"
     } else {
-        Write-Error "For some reason the coverage file was not generated." -ErrorAction Continue
+        Write-Output "For some reason the coverage file was not generated. Perhaps there were no tests in the test folders." -ErrorAction Continue
     }
 }
 
