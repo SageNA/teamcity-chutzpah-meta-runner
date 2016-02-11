@@ -5,6 +5,7 @@ cls
 $pluginFolder = ".\plugin"
 $packingFolder = ".\.artifacts"
 $agentFolder = Join-Path $packingFolder "agent"
+$toolsFolder = Join-Path $agentFolder "tools"
 
 # Create .package folder
 if (-not (Test-Path $packingFolder))
@@ -20,7 +21,8 @@ else
 
 Write-Output "Copying files to $packingFolder"
 Copy-Item $pluginFolder\* $packingFolder -Recurse
-Copy-Item .\chutzpah-run.ps1 $agentFolder\tools
+New-Item $toolsFolder -ItemType Directory
+Copy-Item .\chutzpah-run.ps1 $toolsFolder
 
 
 Write-Output "Creating plugin zip in $packingFolder"
