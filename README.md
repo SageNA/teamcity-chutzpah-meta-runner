@@ -5,8 +5,8 @@ Chutzpah Console NuGet package.
 ## How to use
 
 ### Installing plugin in TeamCity
-Copy the plugin zip (ChutzpahConsole-plugin.zip) into the main TeamCity plugins directory, located at _**\<TeamCity Data Directory>**/plugins_. 
-It will automatically get unpacked into the Build Agent Tools folder located at _**\<TeamCity Home>**/buildAgent/tools_.
+Copy the plugin zip (ChutzpahConsole-plugin.zip) into the main TeamCity plugins directory, located at _**<TeamCity Data Directory\>**/plugins_. 
+It will automatically get unpacked into the Build Agent Tools folder located at _**<TeamCity Home\>**/buildAgent/tools_.
 
 If you are not sure where the home or data directories are located you can find them in the Administration section of TeamCity.
 
@@ -15,7 +15,7 @@ Alternatively use the 'Upload Plugin Zip' option in the TeamCity Administration 
 
 ### Added Meta-Runner to Build Configuration
 
-Once the plugin has unpacked you should see _Chutzpah Console_ as an option when you add a new build step in your build configuration. Test folders is the only manadatory field 
+Once the plugin has unpacked you should see _Chutzpah Console_ as an option when you add a new build step in your build configuration. Test folders is the only mandatory field 
 and each of the semicolon-separated values should match the -path parameter for the chutzpah console exe.
 
 ![Set up build step](assets/teamcity-build-step.png)
