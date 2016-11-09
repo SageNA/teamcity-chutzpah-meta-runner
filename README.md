@@ -5,8 +5,8 @@ Chutzpah Console NuGet package.
 ## How to use
 
 ### Installing plugin in TeamCity
-Copy the plugin zip (ChutzpahConsole-plugin.zip) into the main TeamCity plugins directory, located at _**<TeamCity Data Directory\>**/plugins_. 
-It will automatically get unpacked into the Build Agent Tools folder located at _**<TeamCity Home\>**/buildAgent/tools_.
+Copy the plugin zip (ChutzpahConsole-plugin.zip) into the main TeamCity plugins directory, located at _**\<TeamCity Data Directory\>**/plugins_. 
+It will automatically get unpacked into the Build Agent Tools folder located at _**\<TeamCity Home\>**/buildAgent/tools_.
 
 If you are not sure where the home or data directories are located you can find them in the Administration section of TeamCity.
 
